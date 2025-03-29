@@ -7,23 +7,23 @@ const router = Router();
 
 
 router.get("/", async (req, res) => {
-    const viagemss = await prisma.viagemss.findMany()
-    res.status(200).json(viagemss)
+    const viagens = await prisma.viagens.findMany()
+    res.status(200).json(viagens)
 })
 
 router.post("/", async (req, res) => {
-    const { titulo, genero, duracao, preco, sinopse } = req.body
+    const { destino, transporte, dataSaida, preco, duracao } = req.body
 
-    if (!titulo || !genero || !duracao || !preco) {
+    if (!destino || !transporte || !dataSaida || !preco) {
         res.status(400).json({ erro: "Informe todos os dados" })
         return
     }
 
-    const viagems = await prisma.viagems.create({
-        data: { titulo, genero, duracao, preco, sinopse }
+    const viagens = await prisma.viagens.create({
+        data: { destino, transporte, dataSaida, preco, duracao }
     })
 
-    res.status(201).json(viagems)
+    res.status(201).json(viagens)
 })
 
 router.put("/:id", async (req, res) => {
@@ -31,20 +31,20 @@ router.put("/:id", async (req, res) => {
     const { id } = req.params
 
     // recebe as variáveis vindas no corpo da requisição
-    const { titulo, genero, duracao, preco, sinopse } = req.body
+    const { destino, transporte, dataSaida, preco, duracao } = req.body
 
     // verifica se os campos obrigatórios foram passados
-    if (!titulo || !genero || !duracao || !preco) {
+    if (!destino || !transporte || !dataSaida || !preco) {
         res.status(400).json({ erro: "Informe todos os dados" })
         return
     }
 
     try {
-        const viagems = await prisma.viagems.update({
+        const viagens = await prisma.viagens.update({
             where: { id: Number(id) },
-            data: { titulo, genero, duracao, preco, sinopse }
+            data: { destino, transporte, dataSaida, preco, duracao }
         })
-        res.status(200).json(viagems)
+        res.status(200).json(viagens)
     } catch (error) {
         res.status(400).json({ erro: error })
     }
@@ -54,12 +54,12 @@ router.delete("/:id", async (req, res) => {
     // recebe o id passado como parâmetro
     const { id } = req.params
 
-    // realiza a exclusão do viagems
+    // realiza a exclusão do viagens
     try {
-        const viagems = await prisma.viagems.delete({
+        const viagens = await prisma.viagens.delete({
             where: { id: Number(id) }
         })
-        res.status(200).json(viagems)
+        res.status(200).json(viagens)
     } catch (error) {
         res.status(400).json({ erro: error })
     }
