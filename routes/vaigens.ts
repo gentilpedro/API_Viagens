@@ -7,8 +7,8 @@ const router = Router();
 
 
 router.get("/", async (req, res) => {
-    const viagens = await prisma.viagen.findMany()
-    res.status(200).json(viagens)
+    const viagemss = await prisma.viagemss.findMany()
+    res.status(200).json(viagemss)
 })
 
 router.post("/", async (req, res) => {
@@ -19,11 +19,11 @@ router.post("/", async (req, res) => {
         return
     }
 
-    const viagen = await prisma.viagen.create({
+    const viagems = await prisma.viagems.create({
         data: { titulo, genero, duracao, preco, sinopse }
     })
 
-    res.status(201).json(viagen)
+    res.status(201).json(viagems)
 })
 
 router.put("/:id", async (req, res) => {
@@ -40,11 +40,11 @@ router.put("/:id", async (req, res) => {
     }
 
     try {
-        const viagen = await prisma.viagen.update({
+        const viagems = await prisma.viagems.update({
             where: { id: Number(id) },
             data: { titulo, genero, duracao, preco, sinopse }
         })
-        res.status(200).json(viagen)
+        res.status(200).json(viagems)
     } catch (error) {
         res.status(400).json({ erro: error })
     }
@@ -54,12 +54,12 @@ router.delete("/:id", async (req, res) => {
     // recebe o id passado como parâmetro
     const { id } = req.params
 
-    // realiza a exclusão do viagen
+    // realiza a exclusão do viagems
     try {
-        const viagen = await prisma.viagen.delete({
+        const viagems = await prisma.viagems.delete({
             where: { id: Number(id) }
         })
-        res.status(200).json(viagen)
+        res.status(200).json(viagems)
     } catch (error) {
         res.status(400).json({ erro: error })
     }

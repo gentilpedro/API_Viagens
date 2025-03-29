@@ -9,17 +9,6 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-
-model Viagens {
-  id        Int      @id @default(autoincrement())
-  destino    String   @db.VarChar(50)
-  transporte    String   @db.VarChar(20)
-  dataSaida  DateTime @default(now())
-  preco     Decimal  @db.Decimal(7, 2)
-  duracao   DateTime @default(now())
-  @@map("viagens")
 }
