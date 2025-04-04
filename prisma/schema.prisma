@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// datasource db {
+//   provider = "mysql"
+//   url      = "mysql://root:711585@localhost:3306/turismo_nome_aluno"
+// }
+
 
 model Viagens {
   id        Int      @id @default(autoincrement())
