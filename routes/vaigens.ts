@@ -15,11 +15,26 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     const { destino, transporte, dataSaida, preco, duracao } = req.body
 
-    // const usuarioSchema = z.object({
-    //     nome: z.string().min(3),
-    //     email: z.string().email(),
-    //     idade: z.number().min(18)
-    //    });
+    const viagemSchema = z.object({
+        destino: z.string(),
+        transporte: z.string(),
+        dataSaida: z.string().refine((date) => !isNaN(Date.parse(date)), {
+            message: "Invalid date format",
+        }),
+        preco: z.number(),
+        duracao: z.number().optional(),
+    });
+
+    try {
+        viagemSchema.parse({ destino, transporte, dataSaida, preco, duracao });
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            res.status(400).json({ erro: error.errors });
+        } else {
+            res.status(500).json({ erro: "Unexpected error" });
+        }
+        return;
+    }
 
     if (!destino || !transporte || !dataSaida || !preco) {
         res.status(400).json({ erro: "Informe todos os dados" })
@@ -57,6 +72,7 @@ router.put("/:id", async (req, res) => {
     }
 })
 
+
 router.delete("/:id", async (req, res) => {
     // recebe o id passado como parâmetro
     const { id } = req.params
@@ -71,6 +87,36 @@ router.delete("/:id", async (req, res) => {
         res.status(400).json({ erro: error })
     }
 })
+
+router.get("/filter/transporte/:transporte", async (req, res) => {
+    const { transporte } = req.params;
+
+    try {
+        const viagens = await prisma.viagens.findMany({
+            where: { transporte }
+        });
+        res.status(200).json(viagens);
+    } catch (error) {
+        res.status(400).json({ erro: error });
+    }
+});
+
+router.get("/filter/preco/:preco", async (req, res) => {
+    const { preco } = req.params;
+
+    try {
+        const viagens = await prisma.viagens.findMany({
+            where: {
+                preco: {
+                    lte: Number(preco)
+                }
+            }
+        });
+        res.status(200).json(viagens);
+    } catch (error) {
+        res.status(400).json({ erro: error });
+    }
+});
 
 
 export default router;  
