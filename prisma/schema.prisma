@@ -7,13 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Viagens {
-  id         Int      @id @default(autoincrement())
-  destino    String   @db.VarChar(50)
-  transporte String   @db.VarChar(20)
-  dataSaida DateTime
-  preco      Decimal  @db.Decimal(7, 2)
-  duracao    DateTime @default(now())
-
+model Viagem {
+  id          Int          @id @default(autoincrement())
+  destino     String       @db.VarChar(40)
+  transporte  Transportes  
+  dataSaida   DateTime     @default(now())
+  preco       Decimal      @db.Decimal(9, 2)
+  duracao     Int          @db.SmallInt()
+  hotel       String       @db.VarChar(50) @default("")
+  estrelas    Int          @db.SmallInt() @default(0)
   @@map("viagens")
+}
+
+enum Transportes {
+  Terrestre
+  Marítimo
+  Aéreo
 }

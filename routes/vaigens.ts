@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Transportes } from "@prisma/client"
 import { z } from "zod"
 
 const prisma = new PrismaClient();
@@ -8,8 +8,8 @@ const router = Router();
 
 
 router.get("/", async (req, res) => {
-    const viagens = await prisma.viagens.findMany()
-    res.status(200).json(viagens)
+    const viagem = await prisma.viagem.findMany()
+    res.status(200).json(viagem)
 })
 
 router.post("/", async (req, res) => {
@@ -41,11 +41,11 @@ router.post("/", async (req, res) => {
         return
     }
 
-    const viagens = await prisma.viagens.create({
+    const viagem = await prisma.viagem.create({
         data: { destino, transporte, dataSaida, preco, duracao }
     })
 
-    res.status(201).json(viagens)
+    res.status(201).json(viagem)
 })
 
 router.put("/:id", async (req, res) => {
@@ -62,11 +62,11 @@ router.put("/:id", async (req, res) => {
     }
 
     try {
-        const viagens = await prisma.viagens.update({
+        const viagem = await prisma.viagem.update({
             where: { id: Number(id) },
             data: { destino, transporte, dataSaida, preco, duracao }
         })
-        res.status(200).json(viagens)
+        res.status(200).json(viagem)
     } catch (error) {
         res.status(400).json({ erro: error })
     }
@@ -77,25 +77,24 @@ router.delete("/:id", async (req, res) => {
     // recebe o id passado como parâmetro
     const { id } = req.params
 
-    // realiza a exclusão do viagens
+    // realiza a exclusão do viagem
     try {
-        const viagens = await prisma.viagens.delete({
+        const viagem = await prisma.viagem.delete({
             where: { id: Number(id) }
         })
-        res.status(200).json(viagens)
+        res.status(200).json(viagem)
     } catch (error) {
         res.status(400).json({ erro: error })
     }
 })
 
-router.get("/filter/transporte/:transporte", async (req, res) => {
-    const { transporte } = req.params;
-
+router.get("/filter/transporte/:transp", async (req, res) => {
+    const { transp } = req.params
     try {
-        const viagens = await prisma.viagens.findMany({
-            where: { transporte }
+        const viagem = await prisma.viagem.findMany({
+            where: { transporte: transp as Transportes }
         });
-        res.status(200).json(viagens);
+        res.status(200).json(viagem);
     } catch (error) {
         res.status(400).json({ erro: error });
     }
@@ -105,14 +104,14 @@ router.get("/filter/preco/:preco", async (req, res) => {
     const { preco } = req.params;
 
     try {
-        const viagens = await prisma.viagens.findMany({
+        const viagem = await prisma.viagem.findMany({
             where: {
                 preco: {
                     lte: Number(preco)
                 }
             }
         });
-        res.status(200).json(viagens);
+        res.status(200).json(viagem);
     } catch (error) {
         res.status(400).json({ erro: error });
     }
