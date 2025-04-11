@@ -7,18 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// datasource db {
-//   provider = "mysql"
-//   url      = "mysql://root:711585@localhost:3306/turismo_nome_aluno"
-// }
-
-
 model Viagens {
-  id        Int      @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   destino    String   @db.VarChar(50)
-  transporte    String   @db.VarChar(20)
-  dataSaida  DateTime @default(now())
-  preco     Decimal  @db.Decimal(7, 2)
-  duracao   DateTime @default(now())
+  transporte String   @db.VarChar(20)
+  dataSaida DateTime
+  preco      Decimal  @db.Decimal(7, 2)
+  duracao    DateTime @default(now())
+
   @@map("viagens")
 }
